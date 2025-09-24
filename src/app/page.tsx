@@ -1,5 +1,5 @@
 "use client"
-import { DaySelector, ClassCard, ScheduleList, AttendanceControl } from '@/components';
+import { DaySelector, ScheduleList, AttendanceControl } from '@/components';
 import { AttendanceItem, ScheduleData } from '@/types/homeType';
 import React, { useState } from 'react';
 
