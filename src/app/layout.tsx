@@ -1,6 +1,14 @@
+//general imports
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+
+//style
 import "./globals.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+//components
 import Sidebar from "../components/Sidebar";
 
 const poppins = Poppins({
@@ -10,8 +18,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Meu App",
-  description: "Aplicação Next.js com fonte Poppins",
+  title: "SAU",
+  description: "Sistema acadêmico da PUC - Rio",
 };
 
 export default function RootLayout({

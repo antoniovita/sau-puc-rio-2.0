@@ -4,7 +4,7 @@ import { AttendanceItem, ScheduleData } from '@/types/homeType';
 import React, { useState } from 'react';
 
 
-export default function AcademicSchedule() {
+export default function Home() {
   const [selectedDay, setSelectedDay] = useState('Segunda-Feira');
 
   const days = ['Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira'];

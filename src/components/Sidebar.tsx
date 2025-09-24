@@ -3,13 +3,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  FiUser,
-  FiSettings,
   FiLogOut,
-  FiBell,
   FiSearch
 } from 'react-icons/fi';
-import { FaBell, FaFolderClosed, FaGraduationCap, FaSteam, FaUser } from 'react-icons/fa6';
+import { FaBell, FaFolderClosed, FaGraduationCap, FaUser } from 'react-icons/fa6';
 import { FaBars, FaBook, FaCog, FaHome } from 'react-icons/fa';
 
 interface NavItem {
@@ -21,7 +18,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Início', href: '/', icon: FaHome },
   { label: 'Disciplinas', href: '/profile', icon: FaFolderClosed },
-  { label: 'Acadêmico', href: '/projects', icon: FaBook },
+  { label: 'Acadêmico', href: '/academic', icon: FaBook },
   { label: 'Graus', href: '/reports', icon: FaGraduationCap },
   { label: 'Mais', href: '/messages', icon: FaBars },
   { label: 'Notificações', href: '/notifications', icon: FaBell },
