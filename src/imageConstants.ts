@@ -1,0 +1,1 @@
+export const PUC = require("./public/puc.png")
