@@ -9,7 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 //components
-import Sidebar from "../components/Sidebar";
+import { Sidebar } from "@/components";
 
 const poppins = Poppins({
   subsets: ["latin"],

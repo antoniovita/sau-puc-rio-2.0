@@ -1,5 +1,5 @@
 "use client"
-import { DisciplinasCard, DisciplinasTable, YearSelector, } from '@/components';
+import { DisciplinasCard, DisciplinasTable, NivelamentosTable, YearSelector, } from '@/components';
 import React, { useState } from 'react';
 
 
@@ -72,8 +72,12 @@ export default function Academic() {
 
       <DisciplinasTable disciplinas={disciplinasData} />
 
-      <div className=''>
+      <div className='py-6'>
        <DisciplinasCard />
+      </div>
+
+      <div className=''>
+        <NivelamentosTable />
       </div>
 
       </div>

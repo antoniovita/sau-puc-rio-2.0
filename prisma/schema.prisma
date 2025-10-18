@@ -1,0 +1,255 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/* ===================== Enums ===================== */
+enum SubjectType {
+  OPTATIVA
+  OBRIGATORIA
+  ELETIVA
+}
+
+enum DayOfWeek {
+  SEG
+  TER
+  QUA
+  QUI
+  SEX
+  SAB
+}
+
+enum EnrollmentStatus {
+  ATIVA
+  APROVADO
+  REPROVADO
+  TRANCADO
+  CANCELADO
+}
+
+/* ===================== Core ===================== */
+model User {
+  id         String        @id @default(uuid())
+  name       String
+  cpf        String        @unique
+  email      String
+  matricula  String        @unique
+  professor  Boolean       // true => professor; false => aluno
+
+  // relações de aluno
+  enrollments Enrollment[]
+  absences     Absence[]
+  assessments  Assessment[] // graus
+  history      History?
+
+  // domínios (N:N)
+  domains DomainUser[]
+
+  // se professor: turmas que leciona
+  groupsTaught Group[]      @relation("ProfessorGroups")
+
+  @@index([email])
+}
+
+/* Disciplina */
+model Subject {
+  id           String            @id @default(uuid())
+  name         String
+  creditos     Int
+  nivelamento  Boolean
+
+  // oferta (turmas)
+  groups       Group[]
+
+  // vínculo com cursos (obrigatória/optativa/eletiva)
+  courseLinks  CourseSubject[]
+
+  // pré-requisitos (auto-relação N:N)
+  prerequisites Subject[]        @relation("SubjectPrereqs", references: [id])
+  requiredBy    Subject[]        @relation("SubjectRequiredBy", references: [id])
+
+  // domínios (N:N)
+  domains DomainSubject[]
+
+  @@index([name])
+}
+
+/* Curso */
+model Course {
+  id    String          @id @default(uuid())
+  name  String
+  code  String          @unique
+
+  subjects CourseSubject[]
+}
+
+/* Matéria obrigatória/optativa/eletiva em um curso */
+model CourseSubject {
+  id        String      @id @default(uuid())
+  type      SubjectType
+
+  courseId  String
+  subjectId String
+
+  course  Course  @relation(fields: [courseId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([courseId, subjectId])
+  @@index([subjectId])
+}
+
+/* ===================== Ofertas (Turmas) ===================== */
+model Group {
+  id         String       @id @default(uuid())
+  code       String       // ex.: MAT101-A
+  periodo    String       // ex.: 2025.1
+  room       String?
+  vagas      Int?
+
+  // horários/dias
+  startTime  String       // "HH:MM" (Postgres TIME pode ser usado via @db.Time se preferir)
+  endTime    String       // "HH:MM"
+  days       DayOfWeek[]  @default([])
+
+  // relações
+  subjectId  String
+  subject    Subject      @relation(fields: [subjectId], references: [id])
+
+  professorId String?
+  professor   User?       @relation("ProfessorGroups", fields: [professorId], references: [id])
+
+  enrollments Enrollment[]
+  absences    Absence[]
+  assessments Assessment[]
+
+  @@index([subjectId])
+  @@index([professorId])
+  @@index([periodo, code], map: "idx_group_period_code")
+}
+
+/* ===================== Matrícula / Histórico ===================== */
+model Enrollment {
+  id          String           @id @default(uuid())
+  status      EnrollmentStatus @default(ATIVA)
+  finalGrade  Float?
+  attendance  Float?           // 0..100 (%)
+
+  userId  String
+  groupId String
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])  // um aluno não pode se matricular 2x na mesma turma
+  @@index([groupId])
+}
+
+model History {
+  id                String  @id @default(uuid())
+  ira               Float   // Índice de Rendimento Acadêmico
+  creditosAprovados Int
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+/* ===================== Frequência (Faltas) ===================== */
+model Absence {
+  id            String    @id @default(uuid())
+  date          DateTime
+  hoursMissed   Float
+  justified     Boolean   @default(false)
+  justification String?
+
+  userId  String
+  groupId String
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  @@index([userId, groupId, date])
+}
+
+/* ===================== Domínios ===================== */
+model Domain {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+
+  subjects DomainSubject[]
+  users    DomainUser[]
+
+  @@unique([name])
+}
+
+model DomainSubject {
+  id         String  @id @default(uuid())
+  domainId   String
+  subjectId  String
+
+  domain  Domain  @relation(fields: [domainId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([domainId, subjectId])
+  @@index([subjectId])
+}
+
+model DomainUser {
+  id        String @id @default(uuid())
+  domainId  String
+  userId    String
+
+  domain Domain @relation(fields: [domainId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([domainId, userId])
+  @@index([userId])
+}
+
+/* ===================== Avaliações (Graus e Notas) ===================== */
+model Assessment {               // Grau
+  id          String  @id @default(uuid())
+  description String
+  totalWeight Float?
+
+  userId  String
+  groupId String
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+
+  grades Grade[]                 // 2..4 notas (validar na aplicação)
+
+  @@index([userId, groupId])
+}
+
+model Grade {                    // Nota
+  id           String   @id @default(uuid())
+  value        Float
+  ordem        Int      // 1..4
+  weight       Float
+
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
+
+  @@index([assessmentId])
+}
+
+/* ===================== Pré-requisitos de disciplina ===================== */
+/* auto-relação N:N explicitada para clareza e facilidade de consulta */
+model SubjectPrerequisite {
+  id              String @id @default(uuid())
+  subjectId       String
+  prerequisiteId  String
+
+  subject       Subject @relation("SubjectPrereqs",   fields: [subjectId],      references: [id])
+  prerequisite  Subject @relation("SubjectRequiredBy",fields: [prerequisiteId], references: [id])
+
+  @@unique([subjectId, prerequisiteId])
+  @@index([prerequisiteId])
+}
