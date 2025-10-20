@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/* ===================== Enums ===================== */
+// ===================== Enums =====================
 enum SubjectType {
   OPTATIVA
   OBRIGATORIA
@@ -32,33 +32,33 @@ enum EnrollmentStatus {
   CANCELADO
 }
 
-/* ===================== Core ===================== */
+// ===================== Core =====================
 model User {
-  id         String        @id @default(uuid())
-  name       String
-  cpf        String        @unique
-  email      String
-  matricula  String        @unique
-  professor  Boolean       // true => professor; false => aluno
+  id           String        @id @default(uuid())
+  name         String
+  cpf          String        @unique
+  email        String
+  matricula    String        @unique
+  professor    Boolean       // true => professor; false => aluno
 
   // relações de aluno
-  enrollments Enrollment[]
+  enrollments  Enrollment[]
   absences     Absence[]
-  assessments  Assessment[] // graus
+  assessments  Assessment[]  // graus
   history      History?
 
   // domínios (N:N)
-  domains DomainUser[]
+  domains      DomainUser[]
 
   // se professor: turmas que leciona
-  groupsTaught Group[]      @relation("ProfessorGroups")
+  groupsTaught Group[]       @relation("ProfessorGroups")
 
   @@index([email])
 }
 
-/* Disciplina */
+// Disciplina
 model Subject {
-  id           String            @id @default(uuid())
+  id           String           @id @default(uuid())
   name         String
   creditos     Int
   nivelamento  Boolean
@@ -69,26 +69,26 @@ model Subject {
   // vínculo com cursos (obrigatória/optativa/eletiva)
   courseLinks  CourseSubject[]
 
-  // pré-requisitos (auto-relação N:N)
-  prerequisites Subject[]        @relation("SubjectPrereqs", references: [id])
-  requiredBy    Subject[]        @relation("SubjectRequiredBy", references: [id])
+  // pré-requisitos (auto-relação M:N implícita)
+  prerequisites Subject[] @relation("SubjectPrereq")
+  requiredBy    Subject[] @relation("SubjectPrereq")
 
   // domínios (N:N)
-  domains DomainSubject[]
+  domains      DomainSubject[]
 
   @@index([name])
 }
 
-/* Curso */
+// Curso
 model Course {
-  id    String          @id @default(uuid())
-  name  String
-  code  String          @unique
+  id       String          @id @default(uuid())
+  name     String
+  code     String          @unique
 
   subjects CourseSubject[]
 }
 
-/* Matéria obrigatória/optativa/eletiva em um curso */
+// Matéria obrigatória/optativa/eletiva em um curso
 model CourseSubject {
   id        String      @id @default(uuid())
   type      SubjectType
@@ -103,25 +103,25 @@ model CourseSubject {
   @@index([subjectId])
 }
 
-/* ===================== Ofertas (Turmas) ===================== */
+// ===================== Ofertas (Turmas) =====================
 model Group {
-  id         String       @id @default(uuid())
-  code       String       // ex.: MAT101-A
-  periodo    String       // ex.: 2025.1
-  room       String?
-  vagas      Int?
+  id          String       @id @default(uuid())
+  code        String       // ex.: MAT101-A
+  periodo     String       // ex.: 2025.1
+  room        String?
+  vagas       Int?
 
   // horários/dias
-  startTime  String       // "HH:MM" (Postgres TIME pode ser usado via @db.Time se preferir)
-  endTime    String       // "HH:MM"
-  days       DayOfWeek[]  @default([])
+  startTime   String       // "HH:MM" (use @db.Time no Postgres se quiser)
+  endTime     String       // "HH:MM"
+  days        DayOfWeek[]  @default([])
 
   // relações
-  subjectId  String
-  subject    Subject      @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  subject     Subject      @relation(fields: [subjectId], references: [id])
 
   professorId String?
-  professor   User?       @relation("ProfessorGroups", fields: [professorId], references: [id])
+  professor   User?        @relation("ProfessorGroups", fields: [professorId], references: [id])
 
   enrollments Enrollment[]
   absences    Absence[]
@@ -132,7 +132,7 @@ model Group {
   @@index([periodo, code], map: "idx_group_period_code")
 }
 
-/* ===================== Matrícula / Histórico ===================== */
+// ===================== Matrícula / Histórico =====================
 model Enrollment {
   id          String           @id @default(uuid())
   status      EnrollmentStatus @default(ATIVA)
@@ -158,7 +158,7 @@ model History {
   user   User   @relation(fields: [userId], references: [id])
 }
 
-/* ===================== Frequência (Faltas) ===================== */
+// ===================== Frequência (Faltas) =====================
 model Absence {
   id            String    @id @default(uuid())
   date          DateTime
@@ -175,7 +175,7 @@ model Absence {
   @@index([userId, groupId, date])
 }
 
-/* ===================== Domínios ===================== */
+// ===================== Domínios =====================
 model Domain {
   id          String          @id @default(uuid())
   name        String
@@ -188,9 +188,9 @@ model Domain {
 }
 
 model DomainSubject {
-  id         String  @id @default(uuid())
-  domainId   String
-  subjectId  String
+  id        String  @id @default(uuid())
+  domainId  String
+  subjectId String
 
   domain  Domain  @relation(fields: [domainId], references: [id])
   subject Subject @relation(fields: [subjectId], references: [id])
@@ -211,8 +211,8 @@ model DomainUser {
   @@index([userId])
 }
 
-/* ===================== Avaliações (Graus e Notas) ===================== */
-model Assessment {               // Grau
+// ===================== Avaliações (Graus e Notas) =====================
+model Assessment {
   id          String  @id @default(uuid())
   description String
   totalWeight Float?
@@ -228,28 +228,14 @@ model Assessment {               // Grau
   @@index([userId, groupId])
 }
 
-model Grade {                    // Nota
-  id           String   @id @default(uuid())
+model Grade {
+  id           String     @id @default(uuid())
   value        Float
-  ordem        Int      // 1..4
+  ordem        Int        // 1..4
   weight       Float
 
   assessmentId String
   assessment   Assessment @relation(fields: [assessmentId], references: [id])
 
   @@index([assessmentId])
-}
-
-/* ===================== Pré-requisitos de disciplina ===================== */
-/* auto-relação N:N explicitada para clareza e facilidade de consulta */
-model SubjectPrerequisite {
-  id              String @id @default(uuid())
-  subjectId       String
-  prerequisiteId  String
-
-  subject       Subject @relation("SubjectPrereqs",   fields: [subjectId],      references: [id])
-  prerequisite  Subject @relation("SubjectRequiredBy",fields: [prerequisiteId], references: [id])
-
-  @@unique([subjectId, prerequisiteId])
-  @@index([prerequisiteId])
 }
