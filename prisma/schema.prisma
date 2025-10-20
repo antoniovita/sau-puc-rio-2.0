@@ -42,6 +42,7 @@ model User {
   email        String
   matricula    String        @unique
   professor    Boolean       // true => professor; false => aluno
+  password     String
 
   //matriculas
   enrollments  Enrollment[]
