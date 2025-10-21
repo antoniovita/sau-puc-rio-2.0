@@ -9,5 +9,6 @@ export { AttendanceControl } from './AttendanceControl';
 
 //academic screen
 export { DisciplinasCard } from './DisciplinasCard';
+export { DisciplinasPage } from './DisciplinasPage';
 export { YearSelector } from "./YearSelector";
 export { DisciplinasTable } from "./DisciplinasTable" 
