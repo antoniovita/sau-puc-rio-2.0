@@ -7,8 +7,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
+
 
 datasource db {
   provider = "postgresql"
@@ -55,7 +55,7 @@ model User {
   history     History?
 
   // domínios (N:N)
-  domains DomainUser[]
+  //domains DomainUser[]
 
   // se professor: turmas que leciona
   groupsTaught Group[] @relation("ProfessorGroups")
@@ -189,7 +189,7 @@ model Domain {
   description String?
 
   subjects DomainSubject[]
-  users    DomainUser[]
+  //users    DomainUser[]
 
   @@unique([name])
 }
@@ -206,17 +206,17 @@ model DomainSubject {
   @@index([subjectId])
 }
 
-model DomainUser {
-  id       String @id @default(uuid())
-  domainId String
-  userId   String
+// model DomainUser {
+//   id       String @id @default(uuid())
+//   domainId String
+//   userId   String
 
-  domain Domain @relation(fields: [domainId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+//   domain Domain @relation(fields: [domainId], references: [id])
+//   user   User   @relation(fields: [userId], references: [id])
 
-  @@unique([domainId, userId])
-  @@index([userId])
-}
+//   @@unique([domainId, userId])
+//   @@index([userId])
+// }
 
 // ===================== Avaliações (Graus e Notas) =====================
 model Assessment {
