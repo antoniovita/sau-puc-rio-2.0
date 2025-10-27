@@ -43,6 +43,7 @@ model User {
   matricula    String        @unique
   professor    Boolean       // true => professor; false => aluno
   password     String
+  adm          Boolean      @default(false)//atributo que disponibiliza permissoes do sistema
 
   //matriculas
   enrollments  Enrollment[]
