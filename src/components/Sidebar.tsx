@@ -17,7 +17,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Início', href: '/', icon: FaHome },
-  { label: 'Disciplinas', href: '/profile', icon: FaFolderClosed },
+  { label: 'Disciplinas', href: '/disciplines', icon: FaFolderClosed },
   { label: 'Acadêmico', href: '/academic', icon: FaBook },
   { label: 'Graus', href: '/grades', icon: FaGraduationCap },
   { label: 'Mais', href: '/messages', icon: FaBars },

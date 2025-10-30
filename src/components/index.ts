@@ -1,8 +1,10 @@
 //side bar
 export { Sidebar } from "./Sidebar"
 
+//general components
+export { Selector } from "./Selector";
+
 //home screen
-export { DaySelector } from './DaySelector';
 export { ClassCard } from './ClassCard';
 export { EmptySchedule } from './EmptySchedule';
 export { ScheduleList } from './ScheduleList';
@@ -13,6 +15,5 @@ export { AttendanceControl } from './AttendanceControl';
 //academic screen
 export { DisciplinasCard } from './DisciplinasCard';
 export { DisciplinasPage } from './DisciplinasPage';
-export { YearSelector } from "./YearSelector";
 export { DisciplinasTable } from "./DisciplinasTable" 
 export { NivelamentosTable } from "./NivelamentosTable"
