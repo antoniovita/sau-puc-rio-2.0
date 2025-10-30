@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
@@ -37,7 +38,7 @@ export const DisciplinasCard = () => {
   ];
 
   return (
-    <div className="w-full max-w-xl mx-auto py-6 sm:max-w-[1300px]">
+    <div className="w-full max-w-sm mx-auto sm:max-w-[1300px]">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-6">
         <h2 className="text-lg font-bold text-gray-900 sm:text-xl">
@@ -52,7 +53,7 @@ export const DisciplinasCard = () => {
       <div className="overflow-hidden px-2">
         <Swiper
           spaceBetween={16}
-          slidesPerView={3.2}
+          slidesPerView={2.2}
           modules={[]}
           breakpoints={{
             480: {

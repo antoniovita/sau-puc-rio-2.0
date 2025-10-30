@@ -1,3 +1,6 @@
+//side bar
+export { Sidebar } from "./Sidebar"
+
 //home screen
 export { DaySelector } from './DaySelector';
 export { ClassCard } from './ClassCard';
@@ -12,3 +15,4 @@ export { DisciplinasCard } from './DisciplinasCard';
 export { DisciplinasPage } from './DisciplinasPage';
 export { YearSelector } from "./YearSelector";
 export { DisciplinasTable } from "./DisciplinasTable" 
+export { NivelamentosTable } from "./NivelamentosTable"

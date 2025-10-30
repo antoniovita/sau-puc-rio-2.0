@@ -19,13 +19,13 @@ const navItems: NavItem[] = [
   { label: 'Início', href: '/', icon: FaHome },
   { label: 'Disciplinas', href: '/profile', icon: FaFolderClosed },
   { label: 'Acadêmico', href: '/academic', icon: FaBook },
-  { label: 'Graus', href: '/reports', icon: FaGraduationCap },
+  { label: 'Graus', href: '/grades', icon: FaGraduationCap },
   { label: 'Mais', href: '/messages', icon: FaBars },
   { label: 'Notificações', href: '/notifications', icon: FaBell },
   { label: 'Configurações', href: '/settings', icon: FaCog },
 ];
 
-const Sidebar: React.FC = () => {
+export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
@@ -147,5 +147,3 @@ const Sidebar: React.FC = () => {
     </>
   );
 };
-
-export default Sidebar;

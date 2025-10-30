@@ -23,7 +23,7 @@ export const DisciplinasTable: React.FC<DisciplinasTableProps> = ({ disciplinas 
   }
 
   return (
-    <div className="w-full px-4 py-6 mx-auto max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-[1300px]">
+    <div className="w-full max-w-[355px] md:max-w-3xl lg:max-w-5xl xl:max-w-[1300px]">
       {/* Mobile Cards - Default */}
       <div className="space-y-4 md:hidden">
         {disciplinas.map((disciplina, index) => (
