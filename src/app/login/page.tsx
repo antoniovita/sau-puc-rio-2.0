@@ -48,7 +48,7 @@ const animationStyles = `
   }
 `;
 
-export const Login = () => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
