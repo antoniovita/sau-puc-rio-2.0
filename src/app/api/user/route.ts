@@ -1,19 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
-const prisma = new PrismaClient();
+export const runtime = "nodejs";
+
+declare global {
+  var prisma: PrismaClient | undefined;
+}
+const prisma = global.prisma ?? new PrismaClient();
+if (process.env.NODE_ENV !== "production") global.prisma = prisma;
 
 const userSchema = z.object({
   name: z.string().min(2, "Nome muito curto."),
-  cpf: z.string().min(11).max(14).transform((s) => s.replace(/\D/g, "")),
+  cpf: z
+    .string()
+    .min(11)
+    .max(14)
+    .transform((s) => s.replace(/\D/g, "")),
   email: z.string().email(),
   matricula: z.string().min(1),
-  professor: z.union([z.boolean(), z.string()]).transform((v) =>
-    typeof v === "boolean" ? v : v === "true" || v === "1"
-  ),
+  professor: z
+    .union([z.boolean(), z.string()])
+    .transform((v) => (typeof v === "boolean" ? v : v === "true" || v === "1")),
   password: z.string().min(6),
 });
 
@@ -63,7 +73,7 @@ export async function POST(req: NextRequest) {
         email: true,
         matricula: true,
         professor: true,
-        adm: true, // <-- seleciona para ir ao token e resposta
+        adm: true, // vai para o token e resposta
       },
     });
 
@@ -89,7 +99,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// pega todos os usuários — o middleware já garante 'adm', então sem checagem aqui
+// pega todos os usuários — o middleware já garante 'adm'
 export async function GET(req: NextRequest) {
   try {
     const { search, page = "1", limit = "20" } = Object.fromEntries(req.nextUrl.searchParams);
@@ -97,16 +107,17 @@ export async function GET(req: NextRequest) {
     const take = Math.min(100, Math.max(1, parseInt(limit as string, 10) || 20));
     const skip = (pageNum - 1) * take;
 
-    const where = search
+    // where tipado corretamente para casar com UserWhereInput
+    const where: Prisma.UserWhereInput | undefined = search
       ? {
           OR: [
-            { name: { contains: search, mode: "insensitive" } },
-            { email: { contains: search, mode: "insensitive" } },
+            { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
+            { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
             { cpf: { contains: search } },
             { matricula: { contains: search } },
           ],
         }
-      : {};
+      : undefined;
 
     const [items, total] = await Promise.all([
       prisma.user.findMany({
