@@ -48,7 +48,7 @@ const animationStyles = `
   }
 `;
 
-export const LoginPage = () => {
+export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -281,4 +281,4 @@ const MobileLogin = () => (
   );
 };
 
-export default LoginPage;
+export default Login;
