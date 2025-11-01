@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient } from "@prisma/client";
 import { EnrollmentStatus } from "@/generated/prisma";
 import { z } from "zod";
 
