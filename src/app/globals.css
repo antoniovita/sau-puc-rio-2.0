@@ -8,3 +8,8 @@
 .scrollbar-none::-webkit-scrollbar {
   display: none;                        
 }
+
+.swiper-pagination-bullet {
+  background: white !important;
+  opacity: 1;
+}
