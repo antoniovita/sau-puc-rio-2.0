@@ -44,10 +44,10 @@ export async function POST(request: Request) {
     });
 
     // cada subjectId cria um relacionamento na tabela CourseSubject
-    const courseSubjects = subjectIds.map((subjectId: string) => ({
+    const courseSubjects = subjectIds.map((subject: { subjectId: string; type: string }) => ({
       courseId: newCourse.id,
-      subjectId,
-      type, 
+      subjectId: subject.subjectId,
+      type: subject.type, 
     }));
 
     // relacionamentos entre Curso e Subjects

@@ -1,14 +1,13 @@
 // Para vizualizar o diagrama UML, rode os comando:
 
 // npx prisma validate
-// npx prisma format
+// npx prisma validate
 
 // depois bata clicar no icon ao lado de run
 
 generator client {
   provider = "prisma-client-js"
 }
-
 
 datasource db {
   provider = "postgresql"
