@@ -1,5 +1,5 @@
 "use client"
-import { DaySelector, ScheduleList, AttendanceControl } from '@/components';
+import { Selector, ScheduleList, AttendanceControl } from '@/components';
 import { AttendanceItem, ScheduleData } from '@/types/homeType';
 import React, { useState } from 'react';
 
@@ -47,10 +47,10 @@ export default function Home() {
             Horários e disciplinas
           </h1>
 
-          <DaySelector 
-            days={days}
-            selectedDay={selectedDay}
-            onDaySelect={setSelectedDay}
+          <Selector 
+            selections={days}
+            selectedThing={selectedDay}
+            onSelect={setSelectedDay}
           />
         </div>
 

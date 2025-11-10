@@ -14,13 +14,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ===================== Enums =====================
+//enums
 enum SubjectType {
   OPTATIVA
   OBRIGATORIA
   ELETIVA
 }
 
+
+//dias da semana
 enum DayOfWeek {
   SEG
   TER
@@ -30,6 +32,7 @@ enum DayOfWeek {
   SAB
 }
 
+//status da matricula
 enum EnrollmentStatus {
   ATIVA
   APROVADO
@@ -38,20 +41,19 @@ enum EnrollmentStatus {
   CANCELADO
 }
 
-// ===================== Core =====================
 model User {
-  id        String  @id @default(uuid())
-  name      String
-  cpf       String  @unique
-  email     String
-  matricula String  @unique
-  professor Boolean // true => professor; false => aluno
+  id           String        @id @default(uuid())
+  name         String
+  cpf          String        @unique
+  email        String
+  matricula    String        @unique
+  professor    Boolean       // true => professor; false => aluno
 
   // relações de aluno
-  enrollments Enrollment[]
-  absences    Absence[]
-  assessments Assessment[] // graus
-  history     History?
+  enrollments  Enrollment[]
+  absences     Absence[]
+  assessments  Assessment[]  // graus
+  history      History?
 
   // domínios (N:N)
   //domains DomainUser[]
@@ -62,7 +64,7 @@ model User {
   @@index([email])
 }
 
-// Disciplina
+// disciplina
 model Subject {
   id          String  @id @default(uuid())
   name        String
@@ -85,7 +87,7 @@ model Subject {
   @@index([name])
 }
 
-// Curso
+// curso
 model Course {
   id   String @id @default(uuid())
   name String
@@ -94,7 +96,7 @@ model Course {
   subjects CourseSubject[]
 }
 
-// Matéria obrigatória/optativa/eletiva em um curso
+// matéria obrigatória/optativa/eletiva em um curso
 model CourseSubject {
   id   String      @id @default(uuid())
   type SubjectType
@@ -109,7 +111,7 @@ model CourseSubject {
   @@index([subjectId])
 }
 
-// ===================== Ofertas (Turmas) =====================
+// oferta de turma
 model Group {
   id      String  @id @default(uuid())
   code    String // ex.: MAT101-A
@@ -138,7 +140,7 @@ model Group {
   @@index([periodo, code], map: "idx_group_period_code")
 }
 
-// ===================== Matrícula / Histórico =====================
+//matriculas
 model Enrollment {
   id         String           @id @default(uuid())
   status     EnrollmentStatus @default(ATIVA)
@@ -155,6 +157,8 @@ model Enrollment {
   @@index([groupId])
 }
 
+
+//historico do aluno
 model History {
   id                String @id @default(uuid())
   ira               Float // Índice de Rendimento Acadêmico
@@ -164,7 +168,7 @@ model History {
   user   User   @relation(fields: [userId], references: [id])
 }
 
-// ===================== Frequência (Faltas) =====================
+//faltas
 model Absence {
   id            String   @id @default(uuid())
   date          DateTime
@@ -181,7 +185,7 @@ model Absence {
   @@index([userId, groupId, date])
 }
 
-// ===================== Domínios =====================
+// dominios adicionais
 model Domain {
   id          String  @id @default(uuid())
   name        String
@@ -193,6 +197,8 @@ model Domain {
   @@unique([name])
 }
 
+
+//materia do dominio adicional
 model DomainSubject {
   id        String @id @default(uuid())
   domainId  String
@@ -205,10 +211,10 @@ model DomainSubject {
   @@index([subjectId])
 }
 
-// model DomainUser {
-//   id       String @id @default(uuid())
-//   domainId String
-//   userId   String
+model DomainUser {
+  id        String @id @default(uuid())
+  domainId  String
+  userId    String
 
 //   domain Domain @relation(fields: [domainId], references: [id])
 //   user   User   @relation(fields: [userId], references: [id])
@@ -217,7 +223,7 @@ model DomainSubject {
 //   @@index([userId])
 // }
 
-// ===================== Avaliações (Graus e Notas) =====================
+//graus
 model Assessment {
   id          String @id @default(uuid())
   description String
@@ -229,7 +235,7 @@ model Assessment {
   user  User  @relation(fields: [userId], references: [id])
   group Group @relation(fields: [groupId], references: [id])
 
-  grades Grade[] // 2..4 notas (validar na aplicação)
+  grades Grade[]                 // 2..4 notas (validar na aplicação)
 
   @@index([userId, groupId])
 }

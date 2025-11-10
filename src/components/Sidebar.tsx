@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import { FaBell, FaFolderClosed, FaGraduationCap, FaUser } from 'react-icons/fa6';
 import { FaBars, FaBook, FaCog, FaHome } from 'react-icons/fa';
+import Image from "next/image"
 
 interface NavItem {
   label: string;
@@ -17,7 +18,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Início', href: '/', icon: FaHome },
-  { label: 'Disciplinas', href: '/profile', icon: FaFolderClosed },
+  { label: 'Disciplinas', href: '/disciplines', icon: FaFolderClosed },
   { label: 'Acadêmico', href: '/academic', icon: FaBook },
   { label: 'Graus', href: '/grades', icon: FaGraduationCap },
   { label: 'Mais', href: '/messages', icon: FaBars },
@@ -32,13 +33,13 @@ export const Sidebar: React.FC = () => {
     <>
       <div className="hidden lg:block fixed left-0 top-0 h-full w-64 bg-white shadow-xl border-r border-gray-200 z-40">
 
-        <div className="flex items-center px-6 h-16  border-b border-gray-200 ">
-            <div className='flex-row flex gap-2'>
-                <h1 className='text-lg text-black mt-1'> <span className='font-bold mr-1 '> SAU. </span>PUC - Rio </h1>
+        <div className="flex items-center px-3 h-16  border-b border-gray-200 ">
+            <div className='flex-row flex gap-1 mt-2 items-center'>
+              <Image src={"/sau.png"} width={70} height={70} alt={''}/>
             </div>
         </div>
 
-        {/* Search bar */}
+
         <div className="p-4">
           <div className="relative">
             <FiSearch className="absolute focus:outline-none focus:ring-0 left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
@@ -50,7 +51,7 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        {/* Navigation */}
+
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             {navItems.map((item) => {
@@ -86,10 +87,8 @@ export const Sidebar: React.FC = () => {
           </ul>
         </nav>
 
-        {/* Bottom section */}
         <div className="border-t border-gray-200 p-4">
           
-          {/* User profile */}
           <div className="flex items-center space-x-3 px-3 py-2 bg-[#DEA02E] rounded-lg  border-gray-200">
             <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
               <FaUser size={16} className="text-[#DEA02E]" />
@@ -108,7 +107,6 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
         <nav className="flex items-center justify-around py-2">
           {navItems.slice(0, 5).map((item) => {

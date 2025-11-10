@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { YearSelector } from "@/components"; // opcional, se quiser reusar o seletor de período
+import { YearSelector } from "@/components"; 
 
 export default function SettingsPage() {
   const [emailNotifications, setEmailNotifications] = useState(true);
