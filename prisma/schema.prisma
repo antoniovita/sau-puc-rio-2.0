@@ -1,3 +1,10 @@
+// Para vizualizar o diagrama UML, rode os comando:
+
+// npx prisma validate
+// npx prisma validate
+
+// depois bata clicar no icon ao lado de run
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -35,70 +42,64 @@ enum EnrollmentStatus {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  cpf          String        @unique
-  email        String
-  matricula    String        @unique
-  professor    Boolean       // true => professor; false => aluno
-  password     String
-  adm          Boolean      @default(false)//atributo que disponibiliza permissoes do sistema
+  id        String  @id @default(uuid())
+  name      String
+  cpf       String  @unique
+  email     String
+  matricula String  @unique
+  professor Boolean // true => professor; false => aluno
 
-  //matriculas
-  enrollments  Enrollment[]
-
-  //faltas
-  absences     Absence[]
-
-  // graus
-  assessments  Assessment[]  
-  history      History?
+  // relações de aluno
+  enrollments Enrollment[]
+  absences    Absence[]
+  assessments Assessment[] // graus
+  history     History?
 
   // domínios (N:N)
-  domains      DomainUser[]
+  //domains DomainUser[]
 
   // se professor: turmas que leciona
-  groupsTaught Group[]       @relation("ProfessorGroups")
+  groupsTaught Group[] @relation("ProfessorGroups")
 
   @@index([email])
 }
 
 // disciplina
 model Subject {
-  id           String           @id @default(uuid())
-  name         String
-  creditos     Int
-  nivelamento  Boolean
+  id          String  @id @default(uuid())
+  name        String
+  creditos    Int
+  nivelamento Boolean
 
   // oferta (turmas)
-  groups       Group[]
+  groups Group[]
 
   // vínculo com cursos (obrigatória/optativa/eletiva)
-  courseLinks  CourseSubject[]
+  courseLinks CourseSubject[]
 
   // pré-requisitos (auto-relação M:N implícita)
   prerequisites Subject[] @relation("SubjectPrereq")
   requiredBy    Subject[] @relation("SubjectPrereq")
 
   // domínios (N:N)
-  domains      DomainSubject[]
+  domains DomainSubject[]
 
   @@index([name])
 }
 
 // curso
 model Course {
-  id       String          @id @default(uuid())
-  name     String
-  code     String          @unique
+  id   String @id @default(uuid())
+  name String
+  code String @unique
 
   subjects CourseSubject[]
 }
 
 // matéria obrigatória/optativa/eletiva em um curso
 model CourseSubject {
-  id        String      @id @default(uuid())
-  type      SubjectType
+  id   String      @id @default(uuid())
+  type SubjectType
 
   courseId  String
   subjectId String
@@ -112,23 +113,23 @@ model CourseSubject {
 
 // oferta de turma
 model Group {
-  id          String       @id @default(uuid())
-  code        String       // ex.: MAT101-A
-  periodo     String       // ex.: 2025.1
-  room        String?
-  vagas       Int?
+  id      String  @id @default(uuid())
+  code    String // ex.: MAT101-A
+  periodo String // ex.: 2025.1
+  room    String?
+  vagas   Int?
 
   // horários/dias
-  startTime   String       // "HH:MM" (use @db.Time no Postgres se quiser)
-  endTime     String       // "HH:MM"
-  days        DayOfWeek[]  @default([])
+  startTime String // "HH:MM" (use @db.Time no Postgres se quiser)
+  endTime   String // "HH:MM"
+  days      DayOfWeek[] @default([])
 
   // relações
-  subjectId   String
-  subject     Subject      @relation(fields: [subjectId], references: [id])
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id])
 
   professorId String?
-  professor   User?        @relation("ProfessorGroups", fields: [professorId], references: [id])
+  professor   User?   @relation("ProfessorGroups", fields: [professorId], references: [id])
 
   enrollments Enrollment[]
   absences    Absence[]
@@ -141,10 +142,10 @@ model Group {
 
 //matriculas
 model Enrollment {
-  id          String           @id @default(uuid())
-  status      EnrollmentStatus @default(ATIVA)
-  finalGrade  Float?
-  attendance  Float?           // 0..100 (%)
+  id         String           @id @default(uuid())
+  status     EnrollmentStatus @default(ATIVA)
+  finalGrade Float?
+  attendance Float? // 0..100 (%)
 
   userId  String
   groupId String
@@ -152,15 +153,15 @@ model Enrollment {
   user  User  @relation(fields: [userId], references: [id])
   group Group @relation(fields: [groupId], references: [id])
 
-  @@unique([userId, groupId])  // um aluno não pode se matricular 2x na mesma turma
+  @@unique([userId, groupId]) // um aluno não pode se matricular 2x na mesma turma
   @@index([groupId])
 }
 
 
 //historico do aluno
 model History {
-  id                String  @id @default(uuid())
-  ira               Float   // Índice de Rendimento Acadêmico
+  id                String @id @default(uuid())
+  ira               Float // Índice de Rendimento Acadêmico
   creditosAprovados Int
 
   userId String @unique
@@ -169,10 +170,10 @@ model History {
 
 //faltas
 model Absence {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   date          DateTime
   hoursMissed   Float
-  justified     Boolean   @default(false)
+  justified     Boolean  @default(false)
   justification String?
 
   userId  String
@@ -186,12 +187,12 @@ model Absence {
 
 // dominios adicionais
 model Domain {
-  id          String          @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
 
   subjects DomainSubject[]
-  users    DomainUser[]
+  //users    DomainUser[]
 
   @@unique([name])
 }
@@ -199,7 +200,7 @@ model Domain {
 
 //materia do dominio adicional
 model DomainSubject {
-  id        String  @id @default(uuid())
+  id        String @id @default(uuid())
   domainId  String
   subjectId String
 
@@ -210,25 +211,21 @@ model DomainSubject {
   @@index([subjectId])
 }
 
+// model DomainUser {
+//   id       String @id @default(uuid())
+//   domainId String
+//   userId   String
 
-//user do dominio adicional
-model DomainUser {
-  id        String @id @default(uuid())
-  domainId  String
-  userId    String
+//   domain Domain @relation(fields: [domainId], references: [id])
+//   user   User   @relation(fields: [userId], references: [id])
 
-  completedCredits  Int
-
-  domain Domain @relation(fields: [domainId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-
-  @@unique([domainId, userId])
-  @@index([userId])
-}
+//   @@unique([domainId, userId])
+//   @@index([userId])
+// }
 
 //graus
 model Assessment {
-  id          String  @id @default(uuid())
+  id          String @id @default(uuid())
   description String
   totalWeight Float?
 
@@ -238,16 +235,16 @@ model Assessment {
   user  User  @relation(fields: [userId], references: [id])
   group Group @relation(fields: [groupId], references: [id])
 
-  grades Grade[]                 // 1..4 notas (validar na aplicação)
+  grades Grade[] // 2..4 notas (validar na aplicação)
 
   @@index([userId, groupId])
 }
 
 model Grade {
-  id           String     @id @default(uuid())
-  value        Float
-  ordem        Int        // 1..4
-  weight       Float
+  id     String @id @default(uuid())
+  value  Float
+  ordem  Int // 1..4
+  weight Float
 
   assessmentId String
   assessment   Assessment @relation(fields: [assessmentId], references: [id])
