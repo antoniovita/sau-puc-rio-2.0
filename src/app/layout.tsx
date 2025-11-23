@@ -1,15 +1,9 @@
-//general imports
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+"use client";
 
-//style
-import "./globals.css";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-
-//components
+import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components";
+import { Poppins } from "next/font/google";
+import "./globals.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -17,16 +11,24 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-export const metadata: Metadata = {
-  title: "SAU",
-  description: "Sistema acadêmico da PUC - Rio",
-};
-
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const pathname = usePathname();
+  const isLogin = pathname === "/login";
+
+  if (isLogin) {
+    return (
+      <html lang="en">
+        <body className={`${poppins.className} antialiased bg-gray-50`}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>

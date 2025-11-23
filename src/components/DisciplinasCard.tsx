@@ -38,11 +38,11 @@ export const DisciplinasCard = () => {
   ];
 
   return (
-    <div className="w-full max-w-sm mx-auto sm:max-w-[1300px]">
+    <div className="w-full max-w-sm sm:max-w-[1110px] mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-6">
         <h2 className="text-lg font-bold text-gray-900 sm:text-xl">
-          Disciplinas
+          Horas complementares
         </h2>
         <button className="px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200 sm:px-6 sm:py-2.5">
           Ver mais

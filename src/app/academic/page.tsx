@@ -1,5 +1,5 @@
 "use client"
-import { DisciplinasCard, DisciplinasTable, NivelamentosTable, YearSelector, } from '@/components';
+import { DisciplinasCard, DisciplinasTable, NivelamentosTable, Selector, } from '@/components';
 import React, { useState } from 'react';
 
 
@@ -63,10 +63,10 @@ export default function Academic() {
             Vida acadêmica
           </h1>
 
-        <YearSelector 
-          years={years} 
-          selectedYear={selectedYear} 
-          onYearSelect={setSelectedYear} 
+        <Selector 
+          selections={years} 
+          selectedThing={selectedYear} 
+          onSelect={setSelectedYear} 
         />
         </div>
 
