@@ -1,8 +1,5 @@
 "use client";
-
 import React, { useState } from "react";
-import { FaBell } from "react-icons/fa";
-
 
 interface Notification {
   id: number;
@@ -50,39 +47,32 @@ export default function NotificationsPage() {
 
   const toggleRead = (id: number) => {
     setNotifications((prev) =>
-      prev.map((n) =>
-        n.id === id ? { ...n, read: !n.read } : n
-      )
+      prev.map((n) => (n.id === id ? { ...n, read: !n.read } : n))
     );
   };
 
   return (
     <div className="min-h-screen sm:px-4 sm:py-4 lg:px-6 mb-24 mt-4">
       <div className="max-w-6xl mx-auto">
-        {/* Cabeçalho */}
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-              <FaBell  className="text-yellow-600" />
               Notificações
             </h1>
             <p className="text-gray-600 text-sm">
               Veja os comunicados recentes enviados pelos professores.
             </p>
           </div>
-
-          {/* Botão limpar */}
           <button
             onClick={() =>
               setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
             }
-            className="text-sm font-medium text-yellow-600 hover:underline"
+            className="text-sm font-medium text-yellow-600 hover:text-yellow-700 transition-colors"
           >
             Marcar todas como lidas
           </button>
         </div>
 
-        {/* Lista de notificações */}
         <div className="space-y-4">
           {notifications.length === 0 ? (
             <p className="text-gray-500 text-sm text-center py-8">
@@ -92,10 +82,10 @@ export default function NotificationsPage() {
             notifications.map((notif) => (
               <div
                 key={notif.id}
-                className={`border rounded-xl p-4 shadow-sm transition-all cursor-pointer ${
+                className={`rounded-xl p-4 shadow-sm transition-all cursor-pointer ${
                   notif.read
-                    ? "bg-white border-gray-200 hover:shadow-md"
-                    : "bg-yellow-50 border-yellow-300 hover:bg-yellow-100"
+                    ? "bg-white hover:bg-gray-50 hover:shadow-md"
+                    : "bg-yellow-50 hover:bg-yellow-100 hover:shadow-md"
                 }`}
                 onClick={() => toggleRead(notif.id)}
               >
@@ -105,9 +95,7 @@ export default function NotificationsPage() {
                   </h2>
                   <span className="text-xs text-gray-500">{notif.date}</span>
                 </div>
-
                 <p className="text-gray-700 text-sm mt-2">{notif.message}</p>
-
                 <div className="mt-3 flex justify-between items-center text-xs text-gray-500">
                   <span>
                     {notif.course && (

@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
   { label: 'Disciplinas', href: '/disciplines', icon: FaFolderClosed },
   { label: 'Acadêmico', href: '/academic', icon: FaBook },
   { label: 'Graus', href: '/grades', icon: FaGraduationCap },
-  { label: 'Mais', href: '/messages', icon: FaBars },
+  { label: 'Mais', href: '/more', icon: FaBars },
   { label: 'Notificações', href: '/notifications', icon: FaBell },
   { label: 'Configurações', href: '/settings', icon: FaCog },
 ];
